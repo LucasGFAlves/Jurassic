@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class ConexaoPostgresDB {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/biblioteca_db";
+    private static final String URL = "jdbc:postgresql://localhost:5432/dinossauro_db";
     private static final String USUARIO = "postgres"; // O usuário que configuramos
     private static final String SENHA = "root"; // A senha que configuramos
 

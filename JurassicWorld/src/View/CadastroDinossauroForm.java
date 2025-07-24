@@ -1,52 +1,41 @@
 package View;
 
-import Controller.DinossauroController; // Importe o DinossauroController
+import Controller.DinossauroController;
 import Model.Dinossauro;
 
 import javax.swing.*;
-        import java.awt.*;
-        import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.awt.*;
+import java.time.LocalDate; // caso queria usar data
+import java.time.format.DateTimeParseException; // caso queria usar datetime
 
 public class CadastroDinossauroForm extends JInternalFrame {
 
     private DinossauroController controller;
-    private JTextField txtId, txtNome, txtEspecie, txtPeso, txtAltura, txtDataDescoberta;
+    private JTextField txtId, txtNome, txtEspecie, txtDieta, txtIdadeEstimada, txtIdade, txtStatus;
     private JButton btnSalvar, btnBuscar;
-    private Integer dinossauroIdParaEdicao; // Usado para saber se é uma edição ou novo cadastro
+    private Integer dinossauroIdParaEdicao;
 
-    /**
-     * Construtor para o formulário de Dinossauro.
-     * Pode ser usado para cadastrar um novo dinossauro (dinossauroId = null)
-     * ou para editar um existente (passando o ID do dinossauro).
-     *
-     * @param controller   O DinossauroController que gerenciará as operações de negócio.
-     * @param dinossauroId O ID do dinossauro a ser editado, ou null para um novo cadastro.
-     */
     public CadastroDinossauroForm(DinossauroController controller, Integer dinossauroId) {
         super("Cadastro de Dinossauro", true, true, true, true); // Título, redimensionável, fechável, maximizável, iconificável
         this.controller = controller;
         this.dinossauroIdParaEdicao = dinossauroId;
 
-        setSize(800, 600); // Tamanho da janela interna
+        setSize(500, 350); // Tamanho da janela interna
         setLayout(new GridBagLayout()); // Layout para organizar os componentes
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 80, 5, 80); // Espaçamento entre os componentes
+        gbc.insets = new Insets(5, 40, 5, 40); // Espaçamento entre os componentes
         gbc.fill = GridBagConstraints.HORIZONTAL; // Preenche o espaço horizontalmente
 
         int row = 0; // Contador de linhas para o layout
 
         // Campo ID
-        gbc.gridx = 0;
-        gbc.gridy = row;
+        gbc.gridx = 0; gbc.gridy = row;
         add(new JLabel("ID:"), gbc);
-        gbc.gridx = 1;
-        gbc.gridy = row;
+        gbc.gridx = 1; gbc.gridy = row;
         txtId = new JTextField(10);
         txtId.setEditable(false); // ID não pode ser editado diretamente, apenas buscado
         add(txtId, gbc);
-        gbc.gridx = 2;
-        gbc.gridy = row;
+        gbc.gridx = 2; gbc.gridy = row;
         btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(e -> buscarDinossauro()); // Adiciona ação ao botão Buscar
         add(btnBuscar, gbc);
@@ -74,37 +63,48 @@ public class CadastroDinossauroForm extends JInternalFrame {
         add(txtEspecie, gbc);
         row++;
 
-        // Campo Peso
+        // Campo Dieta
         gbc.gridx = 0;
         gbc.gridy = row;
-        add(new JLabel("Peso (kg):"), gbc);
+        add(new JLabel("Dieta:"), gbc);
         gbc.gridx = 1;
         gbc.gridy = row;
         gbc.gridwidth = 2;
-        txtPeso = new JTextField(20);
-        add(txtPeso, gbc);
+        txtDieta = new JTextField(20);
+        add(txtDieta, gbc);
         row++;
 
-        // Campo Altura
+        // Campo Idade Estimada
         gbc.gridx = 0;
         gbc.gridy = row;
-        add(new JLabel("Altura (m):"), gbc);
+        add(new JLabel("Idade Estimada:"), gbc);
         gbc.gridx = 1;
         gbc.gridy = row;
         gbc.gridwidth = 2;
-        txtAltura = new JTextField(20);
-        add(txtAltura, gbc);
+        txtIdadeEstimada = new JTextField(20);
+        add(txtIdadeEstimada, gbc);
         row++;
 
-        // Campo Data Descoberta
+        // Campo Idade
         gbc.gridx = 0;
         gbc.gridy = row;
-        add(new JLabel("Data Descoberta (AAAA-MM-DD):"), gbc);
+        add(new JLabel("Idade:"), gbc);
         gbc.gridx = 1;
         gbc.gridy = row;
         gbc.gridwidth = 2;
-        txtDataDescoberta = new JTextField(LocalDate.now().toString()); // Preenche com a data atual por padrão
-        add(txtDataDescoberta, gbc);
+        txtIdade = new JTextField(20); // Preenche com a data atual por padrão
+        add(txtIdade, gbc);
+        row++;
+
+        // Campo Status
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        add(new JLabel("Status:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.gridwidth = 2;
+        txtStatus = new JTextField(20); // Preenche com a data atual por padrão
+        add(txtStatus, gbc);
         row++;
 
         // Botão Salvar
@@ -124,22 +124,70 @@ public class CadastroDinossauroForm extends JInternalFrame {
     }
 
     private void buscarDinossauro() {
-        controller.listarTodosDinossauros();
+        String idStr = JOptionPane.showInputDialog(this, "Digite o ID do dinossauro para buscar:");
+        if (idStr != null && !idStr.trim().isEmpty()) {
+            try {
+                int id = Integer.parseInt(idStr);
+                carregarDinossauroParaEdicao(id);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, digite um número.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
-    private void carregarDinossauroParaEdicao(Integer dinossauroIdParaEdicao) {
+    private void carregarDinossauroParaEdicao(int id) {
+        try {
+            Dinossauro dinossauro = controller.buscarDinossauroPorId(id);
+            if (dinossauro != null) {
+                txtId.setText(String.valueOf(dinossauro.getId()));
+                txtNome.setText(dinossauro.getNome());
+                txtEspecie.setText(dinossauro.getEspecie());
+                txtDieta.setText(dinossauro.getDieta());
+                txtIdadeEstimada.setText(dinossauro.getIdade_estimada_anos());
+                txtIdade.setText(dinossauro.getDieta());
+                txtStatus.setText(dinossauro.getStatus_cercado());
+                dinossauroIdParaEdicao = dinossauro.getId(); // Define o ID para indicar que é uma edição
+            } else {
+                JOptionPane.showMessageDialog(this, "Dinossauro com ID " + id + " não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                limparCampos(); // Limpa os campos se não encontrar
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar dinossauro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void salvarDinossauro() {
+        try {
+            String nome = txtNome.getText().trim();
+            String especie = txtEspecie.getText().trim();
+            String dieta = txtDieta.getText().trim();
+            String idadeEstimada = txtIdadeEstimada.getText().trim();
+            String idade = txtIdade.getText().trim();
+            String status = txtStatus.getText().trim();
+
+            if (dinossauroIdParaEdicao == null) { // Se dinossauroIdParaEdicao é null, é um novo cadastro
+                controller.cadastrarDinossauro(nome, especie, dieta, idadeEstimada, idade, status);
+                JOptionPane.showMessageDialog(this, "Dinossauro cadastrado com sucesso!");
+            } else { // Caso contrário, é uma atualização
+                controller.atualizarDinossauro(dinossauroIdParaEdicao, nome, especie, dieta, idadeEstimada, idade, status);
+                JOptionPane.showMessageDialog(this, "Dinossauro atualizado com sucesso!");
+            }
+            this.dispose(); // Fecha a janela após a operação bem-sucedida
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar dinossauro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    private void limparCampos() {
+        txtId.setText("");
+        txtNome.setText("");
+        txtEspecie.setText("");
+        txtDieta.setText("");
+        txtIdadeEstimada.setText("");
+        txtIdade.setText("");
+        txtStatus.setText("");
+        dinossauroIdParaEdicao = null; // Reseta para modo de novo cadastro
+        btnBuscar.setEnabled(true); // Habilita o botão buscar novamente
     }
 }
-/**
- * Abre uma caixa de diálogo para o usuário digitar um ID e busca o dinossauro correspondente.
-
- private void buscarDinossauro() {
- String idStr = JOptionPane.showInputDialog(this, "Digite o ID do dinossauro para buscar:");
- if (idStr != null && !idStr.trim().isEmpty()) {
- try {
- int id = Integer.parseInt(idStr);
- car
- */

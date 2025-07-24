@@ -1,6 +1,5 @@
 package View;
 
-// import controller.BibliotecaController; // REMOVA esta linha
 import Controller.DinossauroController; // Importe o novo DinossauroController
 import Model.Dinossauro;
 
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class ListaDinossauroForm extends JInternalFrame {
 
-    private DinossauroController controller; // Altere para DinossauroController
+    private DinossauroController controller;
     private JTable tabelaDinossauros;
     private DefaultTableModel tableModel;
     private JButton btnAtualizar, btnRemover, btnBuscar;
@@ -52,8 +51,78 @@ public class ListaDinossauroForm extends JInternalFrame {
         //btnRemover.addActionListener(e -> removerDinossauroSelecionado());
         //btnBuscar.addActionListener(e -> buscarDinossaurosPorNome());
 
-        //carregarDinossaurosNaTabela();
     }
 
-    // ... (restante dos métodos internos, como carregarDinossaurosNaTabela, removerDinossauroSelecionado, buscarDinossaurosPorNome) ...
+    /*
+    private void carregarDinossaurosNaTabela() {
+        tableModel.setRowCount(0); // Limpa as linhas existentes na tabela
+        List<Dinossauro> dinossauros = controller.listarTodosDinossauros(); // Busca todos os dinossauros
+        for (Dinossauro dino : dinossauros) {
+            // Adiciona cada dinossauro como uma nova linha na tabela
+            tableModel.addRow(new Object[]{
+                    dino.getId(),
+                    dino.getNome(),
+                    dino.getEspecie(),
+                    dino.getDieta(),
+                    dino.getIdade_estimada_anos(),
+                    dino.getIdade_dinossauro(),
+                    dino.getStatus_cercado()
+            });
+        }
+    }*/
+
+    /*
+    private void removerDinossauroSelecionado() {
+        int selectedRow = tabelaDinossauros.getSelectedRow(); // Obtém a linha selecionada
+        if (selectedRow >= 0) { // Verifica se alguma linha foi selecionada
+            int idDinossauro = (int) tableModel.getValueAt(selectedRow, 0); // Obtém o ID da célula da tabela
+
+            // Confirmação antes de remover
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Tem certeza que deseja remover o dinossauro ID: " + idDinossauro + "?",
+                    "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    controller.removerDinossauro(idDinossauro); // Chama o controller para remover
+                    JOptionPane.showMessageDialog(this, "Dinossauro removido com sucesso!");
+                    carregarDinossaurosNaTabela(); // Atualiza a tabela após a remoção
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao remover dinossauro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um dinossauro para remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }*/
+
+    /*
+    private void buscarDinossaurosPorNome() {
+        String nomeBusca = txtBuscaNome.getText().trim(); // Obtém o texto do campo de busca
+        tableModel.setRowCount(0); // Limpa a tabela
+
+        List<Dinossauro> dinossauros;
+        if (nomeBusca.isEmpty()) {
+            // Se o campo de busca estiver vazio, lista todos
+            dinossauros = controller.listarTodosDinossauros();
+        } else {
+            // Caso contrário, busca por nome
+            dinossauros = controller.buscarDinossauroPorNome(nomeBusca);
+        }
+
+        if (dinossauros.isEmpty() && !nomeBusca.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum dinossauro encontrado com o nome: '" + nomeBusca + "'", "Busca", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        for (Dinossauro dino : dinossauros) {
+            tableModel.addRow(new Object[]{
+                    dino.getId(),
+                    dino.getNome(),
+                    dino.getEspecie(),
+                    dino.getDieta(),
+                    dino.getIdade_estimada_anos(),
+                    dino.getIdade_dinossauro(),
+                    dino.getStatus_cercado()
+            });
+        }
+    }*/
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public class DinossauroDAO { // Sem interface
 
     public void inserir(Dinossauro dinossauro) {
-        String sql = "INSERT INTO dinossauros (nome, especie, dieta, idade_estimada_anos, idade_dinossauro, status_cercado) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO dinossauro (nome, especie, dieta, idade_estimada_anos, idade_dinossauro, status_cercado) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConexaoPostgresDB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, dinossauro.getNome());
@@ -60,7 +60,7 @@ public class DinossauroDAO { // Sem interface
     }
 
     public Dinossauro buscarPorId(int idDinossauro) {
-        String sql = "SELECT id_dinossauro, nome, especie, peso, altura, data_descoberta FROM dinossauros WHERE id_dinossauro = ?";
+        String sql = "SELECT id_dinossauro, nome, especie, dieta, idade_estimada_anos, idade_dinossauro, status_cercado FROM dinossauro WHERE id_dinossauro = ?";
         try (Connection conn = ConexaoPostgresDB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idDinossauro);
@@ -70,9 +70,10 @@ public class DinossauroDAO { // Sem interface
                             rs.getInt("id_dinossauro"),
                             rs.getString("nome"),
                             rs.getString("especie"),
-                            rs.getDouble("peso"),
-                            rs.getDouble("altura"),
-                            rs.getDate("data_descoberta").toLocalDate()
+                            rs.getString("dieta"),
+                            rs.getString("idade_estimada_anos"),
+                            rs.getString("idade_dinossauro"),
+                            rs.getString("status_cercado")
                     );
                 }
             }
@@ -83,15 +84,16 @@ public class DinossauroDAO { // Sem interface
     }
 
     public void atualizar(Dinossauro dinossauro) {
-        String sql = "UPDATE dinossauros SET nome = ?, especie = ?, peso = ?, altura = ?, data_descoberta = ? WHERE id_dinossauro = ?";
+        String sql = "UPDATE dinossauro SET nome = ?, especie = ?, dieta = ?, idade_estimada_anos = ?, idade_dinossauro = ?, status_cercado = ? WHERE id_dinossauro = ?";
         try (Connection conn = ConexaoPostgresDB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, dinossauro.getNome());
             stmt.setString(2, dinossauro.getEspecie());
-            stmt.setDouble(3, dinossauro.getPeso());
-            stmt.setDouble(4, dinossauro.getAltura());
-            stmt.setDate(5, Date.valueOf(dinossauro.getDataDescoberta()));
-            stmt.setInt(6, dinossauro.getId());
+            stmt.setString(3, dinossauro.getDieta());
+            stmt.setString(4, dinossauro.getIdade_estimada_anos());
+            stmt.setString(5, dinossauro.getIdade_dinossauro());
+            stmt.setString(6, dinossauro.getStatus_cercado());
+            stmt.setInt(7, dinossauro.getId());
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Dinossauro atualizado: " + dinossauro.getNome());
@@ -121,7 +123,7 @@ public class DinossauroDAO { // Sem interface
 
     public List<Dinossauro> buscarPorNome(String nomeBusca) {
         List<Dinossauro> dinossauros = new ArrayList<>();
-        String sql = "SELECT id_dinossauro, nome, especie, peso, altura, data_descoberta FROM dinossauros WHERE nome ILIKE ? ORDER BY nome";
+        String sql = "SELECT id_dinossauro, nome, especie, dieta, idade_estimada_anos, idade_dinossauro, status_cercado FROM dinossauro WHERE nome ILIKE ? ORDER BY nome";
         try (Connection conn = ConexaoPostgresDB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + nomeBusca + "%");
@@ -131,9 +133,10 @@ public class DinossauroDAO { // Sem interface
                             rs.getInt("id_dinossauro"),
                             rs.getString("nome"),
                             rs.getString("especie"),
-                            rs.getDouble("peso"),
-                            rs.getDouble("altura"),
-                            rs.getDate("data_descoberta").toLocalDate()
+                            rs.getString("dieta"),
+                            rs.getString("idade_estimada_anos"),
+                            rs.getString("idade_dinossauro"),
+                            rs.getString("status_cercado")
                     );
                     dinossauros.add(dinossauro);
                 }

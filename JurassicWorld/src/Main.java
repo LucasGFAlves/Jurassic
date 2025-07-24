@@ -33,13 +33,13 @@ public class Main extends JFrame {
         // --- Menu Dinossauros (usará dinossauroController) ---
         JMenu menuDinossauros = new JMenu("Dinossauros");
         JMenuItem itemCadastrarDinossauro = new JMenuItem("Cadastrar Dinossauro");
-        JMenuItem itemListarDinossauros = new JMenuItem("Listar Dinossauros");
+        //JMenuItem itemListarDinossauros = new JMenuItem("Listar Dinossauros");
 
         itemCadastrarDinossauro.addActionListener(e -> openDinossauroForm(null));
-        itemListarDinossauros.addActionListener(e -> openListaDinossaurosPanel());
+        //itemListarDinossauros.addActionListener(e -> openListaDinossaurosPanel());
 
         menuDinossauros.add(itemCadastrarDinossauro);
-        menuDinossauros.add(itemListarDinossauros);
+        //menuDinossauros.add(itemListarDinossauros);
 
         menuBar.add(menuDinossauros);
 
@@ -54,7 +54,6 @@ public class Main extends JFrame {
         setJMenuBar(menuBar);
     }
 
-    // --- Métodos para abrir janelas de Dinossauros (passando dinossauroController) ---
     private void openDinossauroForm(Integer idDinossauro) {
         CadastroDinossauroForm dinossauroForm = new CadastroDinossauroForm(dinossauroController, idDinossauro); // Passa o dinossauroController
         desktopPane.add(dinossauroForm);
@@ -62,12 +61,13 @@ public class Main extends JFrame {
         dinossauroForm.toFront();
     }
 
+    /*
     private void openListaDinossaurosPanel() {
         ListaDinossauroForm listaDinossauros = new ListaDinossauroForm(dinossauroController); // Passa o dinossauroController
         desktopPane.add(listaDinossauros);
         listaDinossauros.setVisible(true);
         listaDinossauros.toFront();
-    }
+    }*/
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
